@@ -7,3 +7,4 @@ C:\Users\Shius\Documents\GitHub\TTProject\obj\Debug\TTProject.csproj.CoreCompile
 C:\Users\Shius\Documents\GitHub\TTProject\obj\Debug\TTProject.exe
 C:\Users\Shius\Documents\GitHub\TTProject\obj\Debug\TTProject.pdb
 C:\Users\Shius\Documents\GitHub\TTProject\obj\Debug\TTProject.csprojAssemblyReference.cache
+C:\Users\Shius\Documents\GitHub\TTProject\obj\Debug\TTProject.index.resources

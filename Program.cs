@@ -15,19 +15,19 @@ namespace TTProject
         [STAThread]
         static void Main()
         {
-            /*Application.EnableVisualStyles();
+            Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new index());*/
-            Dice dice = new Dice();
+            Application.Run(new index());
+            /*Dice dice = new Dice();
             List<int> values;
-            Console.WriteLine(dice.diceRoll("6d8!!>4", out values));
+            Console.WriteLine(dice.diceRoll("6d8!kh3", out values));
             String txt = "[";
             foreach (var value in values)
             {
                 txt += value + " ";
             }
             txt += "]";
-            Console.WriteLine(txt);
+            Console.WriteLine(txt);*/
             
         }
     }

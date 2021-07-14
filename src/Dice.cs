@@ -9,7 +9,7 @@ namespace TTProject.src
 {
     class Dice
     {
-        Random r = new Random();        
+        Random r = new Random();  
 
         public int diceRoll(string s, out List<int> values)
         {
