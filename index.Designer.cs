@@ -1,7 +1,7 @@
 ﻿
 namespace TTProject
 {
-    partial class Form1
+    partial class index
     {
         /// <summary>
         /// Required designer variable.
