@@ -191,41 +191,5 @@ namespace TTProject.src
             }
             return result;
         }
-
     }
 }
-
-
-/*switch (b[1])
-                    {
-                        case "!":                                           //5d6!  "(1+3+3+5+1)"
-                            for (int i = 0; i < values.Count(); i++)
-                            {
-                                if (dieType == values[i] && !bBool)
-                                {
-                                    int tmp = r.Next(1, dieType + 1);
-                                    values.Insert(tmp, i + 1);
-                                }
-                                else if ((factor >= values[i] && ((b[2])[0] == '<')) || (factor <= values[i] && ((b[2])[0] == '>')))
-                                {
-                                    int tmp = r.Next(1, dieType + 1);
-                                    values.Insert(tmp, i + 1);
-                                }
-                            }
-                            break;
-                        case "!!":
-                            for (int i = 0; i < values.Count(); i++)
-                            {
-                                if (dieType == values[i] && !bBool)
-                                {
-                                    int tmp = r.Next(1, dieType + 1);
-                                    values[i] += tmp;
-                                }
-                                else if ((factor >= values[i] && ((b[2])[0] == '<')) || (factor <= values[i] && ((b[2])[0] == '>')))
-                                {
-                                    int tmp = r.Next(1, dieType + 1);
-                                    values[i] += tmp;
-                                }
-                            }
-                            break;
-                    }*/
