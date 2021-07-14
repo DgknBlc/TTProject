@@ -1,9 +1,9 @@
 C:\Users\Shius\Documents\GitHub\TTProject\bin\Debug\TTProject.exe.config
 C:\Users\Shius\Documents\GitHub\TTProject\bin\Debug\TTProject.exe
 C:\Users\Shius\Documents\GitHub\TTProject\bin\Debug\TTProject.pdb
-C:\Users\Shius\Documents\GitHub\TTProject\obj\Debug\TTProject.csproj.AssemblyReference.cache
 C:\Users\Shius\Documents\GitHub\TTProject\obj\Debug\TTProject.Properties.Resources.resources
 C:\Users\Shius\Documents\GitHub\TTProject\obj\Debug\TTProject.csproj.GenerateResource.cache
 C:\Users\Shius\Documents\GitHub\TTProject\obj\Debug\TTProject.csproj.CoreCompileInputs.cache
 C:\Users\Shius\Documents\GitHub\TTProject\obj\Debug\TTProject.exe
 C:\Users\Shius\Documents\GitHub\TTProject\obj\Debug\TTProject.pdb
+C:\Users\Shius\Documents\GitHub\TTProject\obj\Debug\TTProject.csprojAssemblyReference.cache

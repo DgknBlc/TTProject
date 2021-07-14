@@ -19,8 +19,16 @@ namespace TTProject
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new index());*/
             Dice dice = new Dice();
-            dice.diceRoll("3d12!>5dh10");
-
+            List<int> values;
+            Console.WriteLine(dice.diceRoll("6d8!!>4", out values));
+            String txt = "[";
+            foreach (var value in values)
+            {
+                txt += value + " ";
+            }
+            txt += "]";
+            Console.WriteLine(txt);
+            
         }
     }
 }
