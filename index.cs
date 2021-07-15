@@ -22,16 +22,13 @@ namespace TTProject
         {
             lbResult.Text = "Sonuç : ";
             string str = "";
+            bool isOpen = cbisOpen.Checked;
             Dice dice = new Dice();
             List<int> list = new List<int>();
-            int result = dice.diceRoll(txbDiceRoller.Text, out list, out str);
+            int result = dice.roll(txbDiceRoller.Text, out str, isOpen);
 
             lbResult.Text += result + "\n";
-            lbResult.Text += "Anlanan : " + str + "\n";
-            foreach (var item in list)
-            {
-                lbResult.Text += item + " ";
-            }
+            lbResult.Text += "Atılan Zar : " + str + "\n";
         }
     }
 }

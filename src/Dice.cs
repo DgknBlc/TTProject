@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -10,24 +11,26 @@ namespace TTProject.src
     class Dice
     {
         Random r = new Random();
-        int[] fateDice = { -1, -1, 0, 0, 1, 1 };
 
-        public int diceRoll(string s, out List<int> values, out string str)
+        #region Patterns
+        int[] fateDice = { -1, -1, 0, 0, 1, 1 };
+        string fatePattern = @"^[1-9]?[0-9]*dF";
+
+        string diePattern = @"[1-9]?[0-9]*d(f|[1-9][0-9]*)";
+        string explodingPattern = @"((!!<|!!>|!<|!>)[1-9][0-9]*)|((!!|!)[0-9]*)";
+        string valuesPattern = @"(kh|kl|dh|dl)[0-9]*";
+        string successPattern = @"[0-9]*(<|>|=)[0-9]+$";
+        string intPatern = @"([0-9]+)";
+        #endregion
+        public int diceRoll(string s, out string str)
         {
             int result = 0;
-            values = new List<int>();
-            str = " ";
+            List<int> values = new List<int>();
+            str = "";
+            bool isKeepDrop = false;
 
             string splitPattern = @"(kh)|(dh)|(kl)|(dl)|(d)|(!!<)|(!!>)|(!!)|(!<)|(!>)|(!)|(<)|(>)|(=)";
-            string pattern = @"^[1-9]?[0-9]*d[1-9][0-9]*(((!!<|!!>|!<|!>)[1-9][0-9]*)|((!!|!)[0-9]*))?((kh|kl|dh|dl)[0-9]*)?((<|>|=)[0-9]+$)?";
-
-            string fatePattern = @"^[1-9]?[0-9]*dF";
-
-            string diePattern = @"^[1-9]?[0-9]*d[1-9][0-9]*";
-            string explodingPattern = @"((!!<|!!>|!<|!>)[1-9][0-9]*)|((!!|!)[0-9]*)";
-            string valuesPattern = @"(kh|kl|dh|dl)[0-9]*";
-            string successPattern = @"(<|>|=)[0-9]+$";
-            string intPatern = @"([0-9]+)$";
+            string pattern = diePattern + "(" + explodingPattern + ")?(" + valuesPattern + ")?(" + successPattern + ")?"; //@"^[1-9]?[0-9]*d[1-9][0-9]*(((!!<|!!>|!<|!>)[1-9][0-9]*)|((!!|!)[0-9]*))?((kh|kl|dh|dl)[0-9]*)?((<|>|=)[0-9]+$)?";
 
             Regex splitRegex = new Regex(splitPattern, RegexOptions.IgnoreCase);
             Regex paternRegex = new Regex(pattern, RegexOptions.IgnoreCase);
@@ -43,25 +46,39 @@ namespace TTProject.src
             if (paternRegex.IsMatch(s))
             {
                 Match match = paternRegex.Match(s);
-                str = match.Value;
+                Console.WriteLine(match.Value);
 
-                short factor;                
+                short diceFactor, factor;                
                 String[] a = splitRegex.Split(dieRegex.Match(match.Value).Value);
 
-                if (!Int16.TryParse(a[0], out factor))
-                    factor = 1;                    
+                if (!Int16.TryParse(a[0], out diceFactor))
+                    diceFactor = 1;
+
+                if (fateRegex.IsMatch(s))
+                {
+                    for (int i = 0; i < diceFactor; i++)
+                    {
+                        int temp = fateDice[r.Next(0, 6)];
+                        values.Add(temp);
+                    }
+
+                    str = listToString(values);
+                    return result = values.Sum();
+                }
+
 
                 short dieType = Int16.Parse(a[2]);
-                for (int i = 0; i < factor; i++)
+                for (int i = 0; i < diceFactor; i++)
                 {
                     int temp = r.Next(1, dieType + 1);
                     values.Add(temp);
                 }
 
                 result = values.Sum();
+                str = listToString(values);
 
 
-                if (explodingRegex.Match(match.Value).Success)
+                if (explodingRegex.IsMatch(match.Value))
                 {
                     string bTemp = explodingRegex.Match(match.Value).Value;
                     string[] charList = splitRegex.Split(bTemp);
@@ -130,19 +147,25 @@ namespace TTProject.src
                         }
                     }
                     result = values.Sum();
+                    str = listToString(values);
                 }
 
-                if (valuesRegex.Match(match.Value).Success)
+                List<int> newValues = new List<int>();
+                if (valuesRegex.IsMatch(match.Value))
                 {
+                    isKeepDrop = true;
                     string cTemp = valuesRegex.Match(match.Value).Value;
                     string[] charList = splitRegex.Split(cTemp);
                     if (!Int16.TryParse(intRegex.Match(cTemp).Value, out factor))
                     {
                         factor = 1;
-                    }
-                    List<int> newValues = new List<int>();
+                    }                    
                     newValues.AddRange(values.GetRange(0, values.Count));
                     newValues.Sort();
+                    if(factor > diceFactor)
+                    {
+                        factor = diceFactor;
+                    }
                     switch (charList[1])
                     {
                         case "kh":
@@ -161,77 +184,135 @@ namespace TTProject.src
                             break;
                     }
                     result = newValues.Sum();
+                    str = "["+ str + "=>"+ listToString(newValues) + "]";
                 }
 
-                if (successRegex.Match(match.Value).Success)
+                if (successRegex.IsMatch(match.Value))
                 {
                     result = 0;
                     string dTemp = successRegex.Match(match.Value).Value;
                     string[] charList = splitRegex.Split(dTemp);
                     Int16.TryParse(intRegex.Match(dTemp).Value, out factor);
-                    for (int i = 0; i < values.Count; i++)
+
+                    List<int> sValues = new List<int>();
+                    if (isKeepDrop)
+                    {
+                        sValues.AddRange(newValues.GetRange(0, newValues.Count));
+                    }
+                    else
+                    {
+                        sValues.AddRange(values.GetRange(0, values.Count));
+                    }
+
+                    for (int i = 0; i < sValues.Count; i++)
                     {
                         switch (charList[1])
                         {
                             case ">":
-                                if (values[i] > factor)
+                                if (sValues[i] > factor)
                                     result++;
                                 break;
                             case "<":
-                                if (values[i] < factor)
+                                if (sValues[i] < factor)
                                     result++;
                                 break;
                             case "=":
-                                if (values[i] == factor)
+                                if (sValues[i] == factor)
                                     result++;
                                 break;
                             default:
                                 Console.WriteLine("Emtpy");
                                 break;
                         }
-                    }                    
-
+                    }
+                    str = "[" + str + charList[1] + factor + " = (" + result + ") Success]";
                 }
-            }
-            else if (fateRegex.IsMatch(s))
-            {
-
-                Match match = fateRegex.Match(s);
-                str = match.Value;
-
-                short factor;
-                String[] a = splitRegex.Split(fateRegex.Match(match.Value).Value);
-
-                if (!Int16.TryParse(a[0], out factor))
-                    factor = 1;
-
-                for (int i = 0; i < factor; i++)
-                {
-                    int temp = fateDice[r.Next(0,6)];
-                    values.Add(temp);
-                }
-
-                result = values.Sum();
-
-            }
-            else
-            {
-                str = " ";
-                Console.WriteLine("Error Code : 1 \nUnexpected Dice Roll");
             }
             return result;
         }
 
-        public string roll(string s)
+        public int roll(string s, out string str, bool isOpen = false)
         {
-            string dicePattern = @"^[1-9]?[0-9]*d[1-9][0-9]*";
-            string parantezPattern = @"\(.*\)";
+            int result = 0;
+            str = "";
+            string openStr = "";
+            string closedStr = "";
+            List<int> resultList = new List<int>();
+            List<string> resultStringList = new List<string>();
 
-            Regex diceRegex = new Regex(dicePattern, RegexOptions.IgnoreCase);
-            Regex parantezRegex = new Regex(parantezPattern, RegexOptions.IgnoreCase);
+            string pattern = diePattern + "(" + explodingPattern + ")?(" + valuesPattern + ")?(" + successPattern + ")?";
 
-            Console.WriteLine(parantezRegex.Match(s).Value);
-            return "";
+            DataTable dt = new DataTable();
+
+            Regex diceRegex = new Regex(pattern, RegexOptions.IgnoreCase);
+            Regex spaceReplacerRegex = new Regex((@"\s+"), RegexOptions.IgnoreCase);
+
+            s = spaceReplacerRegex.Replace(s, "");
+            var a = diceRegex.Matches(s);
+            foreach (var item in a)
+            {
+                string resultStr = "";
+                resultList.Add(diceRoll(item.ToString(), out resultStr));
+                resultStringList.Add(resultStr);
+            }
+            s = diceRegex.Replace(s, "#");
+            int i = 0;
+            foreach (var ch in s)
+            {
+                if (ch == '#')
+                {
+                    closedStr += "["+ resultList[i] +"]";
+                    openStr += resultStringList[i++];
+                }
+                else
+                {
+                    closedStr += ch;
+                    openStr += ch;
+                }
+            }
+            try
+            {
+                var t = dt.Compute(spaceReplacerRegex.Replace(closedStr.Replace('[', ' ').Replace(']',' '),""),"");
+                if (!Int32.TryParse(t.ToString(), out result))
+                {
+                    result = (int)Double.Parse(t.ToString());
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+                str = "Error = -1 : Unkown roll type";
+                return -1;
+                
+            }
+            switch (isOpen)
+            {
+                case true:
+                    str = openStr;
+                    break;
+                default:
+                    str = closedStr;
+                    break;
+            }
+            return result;
+        }
+
+
+        string listToString(List<int> vs)
+        {
+            string txt = "[";
+            for (int i = 0; i < vs.Count; i++)
+            {
+                if (i == vs.Count-1)
+                {
+                    txt += vs[i] + "]";
+                }
+                else
+                {
+                    txt += vs[i] + ",";
+                }
+            }
+            return txt;
         }
     }
 }
