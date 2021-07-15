@@ -9,34 +9,42 @@ namespace TTProject.src
 {
     class Dice
     {
-        Random r = new Random();  
+        Random r = new Random();
+        int[] fateDice = { -1, -1, 0, 0, 1, 1 };
 
-        public int diceRoll(string s, out List<int> values)
+        public int diceRoll(string s, out List<int> values, out string str)
         {
             int result = 0;
             values = new List<int>();
+            str = " ";
 
             string splitPattern = @"(kh)|(dh)|(kl)|(dl)|(d)|(!!<)|(!!>)|(!!)|(!<)|(!>)|(!)|(<)|(>)|(=)";
             string pattern = @"^[1-9]?[0-9]*d[1-9][0-9]*(((!!<|!!>|!<|!>)[1-9][0-9]*)|((!!|!)[0-9]*))?((kh|kl|dh|dl)[0-9]*)?((<|>|=)[0-9]+$)?";
 
+            string fatePattern = @"^[1-9]?[0-9]*dF";
+
             string diePattern = @"^[1-9]?[0-9]*d[1-9][0-9]*";
-            string explodingPattern = @"((!!<|!!>|!<|!>)[1-9][0-9]*)|((!!|!)[0-9]*)";  //(!!<|!!>|!!|!<|!>|!)[1-9]?[0-9]*
+            string explodingPattern = @"((!!<|!!>|!<|!>)[1-9][0-9]*)|((!!|!)[0-9]*)";
             string valuesPattern = @"(kh|kl|dh|dl)[0-9]*";
             string successPattern = @"(<|>|=)[0-9]+$";
             string intPatern = @"([0-9]+)$";
 
             Regex splitRegex = new Regex(splitPattern, RegexOptions.IgnoreCase);
             Regex paternRegex = new Regex(pattern, RegexOptions.IgnoreCase);
+
+            Regex fateRegex = new Regex(fatePattern, RegexOptions.IgnoreCase);
+
             Regex dieRegex = new Regex(diePattern, RegexOptions.IgnoreCase);
             Regex explodingRegex = new Regex(explodingPattern, RegexOptions.IgnoreCase);
             Regex valuesRegex = new Regex(valuesPattern, RegexOptions.IgnoreCase);
             Regex successRegex = new Regex(successPattern, RegexOptions.IgnoreCase);
             Regex intRegex = new Regex(intPatern, RegexOptions.IgnoreCase);
 
-            Match match = paternRegex.Match(s);
-
-            if (match.Success)
+            if (paternRegex.IsMatch(s))
             {
+                Match match = paternRegex.Match(s);
+                str = match.Value;
+
                 short factor;                
                 String[] a = splitRegex.Split(dieRegex.Match(match.Value).Value);
 
@@ -185,11 +193,45 @@ namespace TTProject.src
 
                 }
             }
+            else if (fateRegex.IsMatch(s))
+            {
+
+                Match match = fateRegex.Match(s);
+                str = match.Value;
+
+                short factor;
+                String[] a = splitRegex.Split(fateRegex.Match(match.Value).Value);
+
+                if (!Int16.TryParse(a[0], out factor))
+                    factor = 1;
+
+                for (int i = 0; i < factor; i++)
+                {
+                    int temp = fateDice[r.Next(0,6)];
+                    values.Add(temp);
+                }
+
+                result = values.Sum();
+
+            }
             else
             {
+                str = " ";
                 Console.WriteLine("Error Code : 1 \nUnexpected Dice Roll");
             }
             return result;
+        }
+
+        public string roll(string s)
+        {
+            string dicePattern = @"^[1-9]?[0-9]*d[1-9][0-9]*";
+            string parantezPattern = @"\(.*\)";
+
+            Regex diceRegex = new Regex(dicePattern, RegexOptions.IgnoreCase);
+            Regex parantezRegex = new Regex(parantezPattern, RegexOptions.IgnoreCase);
+
+            Console.WriteLine(parantezRegex.Match(s).Value);
+            return "";
         }
     }
 }

@@ -21,11 +21,13 @@ namespace TTProject
         private void button1_Click(object sender, EventArgs e)
         {
             lbResult.Text = "Sonuç : ";
+            string str = "";
             Dice dice = new Dice();
             List<int> list = new List<int>();
-            int result = dice.diceRoll(txbDiceRoller.Text, out list);
+            int result = dice.diceRoll(txbDiceRoller.Text, out list, out str);
 
             lbResult.Text += result + "\n";
+            lbResult.Text += "Anlanan : " + str + "\n";
             foreach (var item in list)
             {
                 lbResult.Text += item + " ";
