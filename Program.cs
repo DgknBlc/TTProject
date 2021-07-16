@@ -18,12 +18,7 @@ namespace TTProject
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new index());
-            /*Dice dice = new Dice();
-            string str = "";
-            Console.WriteLine("------------------------------\n"  + dice.roll("4d4!>3", out str));
-            Console.WriteLine(str);*/
-            
+            Application.Run(new ChatForm());            
         }
     }
 }

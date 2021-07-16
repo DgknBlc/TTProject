@@ -17,10 +17,11 @@ namespace TTProject.src
         string fatePattern = @"^[1-9]?[0-9]*dF";
 
         string diePattern = @"[1-9]?[0-9]*d(f|[1-9][0-9]*)";
-        string explodingPattern = @"((!!<|!!>|!<|!>)[1-9][0-9]*)|((!!|!)[0-9]*)";
-        string valuesPattern = @"(kh|kl|dh|dl)[0-9]*";
-        string successPattern = @"[0-9]*(<|>|=)[0-9]+$";
-        string intPatern = @"([0-9]+)";
+        string rerollPattern = @"r((o[<>][1-9][0-9]*|o[0-9]*)|([<>][1-9][0-9]*|[0-9]*))"; //https://tinyurl.com/yg2jsgrg
+        string explodingPattern = @"!(!([<>][1-9]|)[0-9]*|([<>][1-9]|)[0-9]*)";
+        string valuesPattern = @"[kd][hl][0-9]*";
+        string successPattern = @"\.[<>=][1-9][0-9]*";
+        string intPatern = @"([0-9]*)$";
         #endregion
         public int diceRoll(string s, out string str)
         {
@@ -29,8 +30,9 @@ namespace TTProject.src
             str = "";
             bool isKeepDrop = false;
 
-            string splitPattern = @"(kh)|(dh)|(kl)|(dl)|(d)|(!!<)|(!!>)|(!!)|(!<)|(!>)|(!)|(<)|(>)|(=)";
-            string pattern = diePattern + "(" + explodingPattern + ")?(" + valuesPattern + ")?(" + successPattern + ")?"; //@"^[1-9]?[0-9]*d[1-9][0-9]*(((!!<|!!>|!<|!>)[1-9][0-9]*)|((!!|!)[0-9]*))?((kh|kl|dh|dl)[0-9]*)?((<|>|=)[0-9]+$)?";
+            string splitPattern = @"(kh)|(dh)|(kl)|(dl)|(d)|(!!<)|(!!>)|(!!)|(!<)|(!>)|(!)|(<)|(>)|(=)|(ro>)|(ro<)|(ro)|(r<)|(r>)|(r)";
+            string pattern = diePattern + "((" + explodingPattern + ")(" + rerollPattern + ")?|(" + rerollPattern + ")(" + explodingPattern + ")?)?(" + valuesPattern + ")?(" + successPattern + ")?";
+            //diePattern + "(" + explodingPattern + ")?(" + rerollPattern + ")?(" + valuesPattern + ")?(" + successPattern + ")?"; //@"^[1-9]?[0-9]*d[1-9][0-9]*(((!!<|!!>|!<|!>)[1-9][0-9]*)|((!!|!)[0-9]*))?((kh|kl|dh|dl)[0-9]*)?((<|>|=)[0-9]+$)?";
 
             Regex splitRegex = new Regex(splitPattern, RegexOptions.IgnoreCase);
             Regex paternRegex = new Regex(pattern, RegexOptions.IgnoreCase);
@@ -38,6 +40,7 @@ namespace TTProject.src
             Regex fateRegex = new Regex(fatePattern, RegexOptions.IgnoreCase);
 
             Regex dieRegex = new Regex(diePattern, RegexOptions.IgnoreCase);
+            Regex rerollRegex = new Regex(rerollPattern, RegexOptions.IgnoreCase);
             Regex explodingRegex = new Regex(explodingPattern, RegexOptions.IgnoreCase);
             Regex valuesRegex = new Regex(valuesPattern, RegexOptions.IgnoreCase);
             Regex successRegex = new Regex(successPattern, RegexOptions.IgnoreCase);
@@ -77,6 +80,77 @@ namespace TTProject.src
                 result = values.Sum();
                 str = listToString(values);
 
+                if (rerollRegex.IsMatch(match.Value)){
+                    string bTemp = rerollRegex.Match(match.Value).Value;
+                    string[] charList = splitRegex.Split(bTemp);
+                    if (!Int16.TryParse(intRegex.Match(bTemp).Value, out factor))
+                    {
+                        factor = 1;
+                    }
+                    int tmp = 0;
+                    for (int i = 0; i < values.Count; i++)
+                    {
+                        switch (charList[1])
+                        {
+                            case "ro>":
+                                if (factor < values[i])
+                                {
+                                    tmp = r.Next(1, dieType + 1);
+                                    values[i] = tmp;
+                                    i++;
+                                }
+                                break;
+                            case "ro<":
+                                if (factor > values[i])
+                                {
+                                    tmp = r.Next(1, dieType + 1);
+                                    values[i] = tmp;
+                                    i++;
+                                }
+                                break;
+                            case "ro":
+                                if (factor == values[i])
+                                {
+                                    tmp = r.Next(1, dieType + 1);
+                                    values[i] = tmp;
+                                    i++;
+                                }
+                                break;
+                            case "r>":
+                                if (factor < values[i])
+                                {
+                                    do
+                                    {
+                                        tmp = r.Next(1, dieType + 1);
+                                        values[i] = tmp;
+                                    } while (factor < values[i]);
+                                }
+                                break;
+                            case "r<":
+                                if (factor > values[i])
+                                {
+                                    do
+                                    {
+                                        tmp = r.Next(1, dieType + 1);
+                                        values[i] = tmp;
+                                    } while (factor > values[i]);
+                                }
+                                break;
+                            case "r":
+                                if (factor == values[i])
+                                {
+                                    do
+                                    {
+                                        tmp = r.Next(1, dieType + 1);
+                                        values[i] = tmp;
+                                    } while (factor == values[i]);
+                                }
+                                break;
+                        }
+                    }
+                    result = values.Sum();
+                    str = listToString(values);
+                }
 
                 if (explodingRegex.IsMatch(match.Value))
                 {
@@ -87,6 +161,8 @@ namespace TTProject.src
                         factor = dieType;
                     }
                     int tmp = 0;
+                    if (factor < 2)
+                        factor = 2;
                     for (int i = 0; i < values.Count(); i++)
                     {
                         switch (charList[1])
@@ -203,7 +279,7 @@ namespace TTProject.src
                     {
                         sValues.AddRange(values.GetRange(0, values.Count));
                     }
-
+                    Console.WriteLine(charList[1] + " " + charList[2]);
                     for (int i = 0; i < sValues.Count; i++)
                     {
                         switch (charList[1])
@@ -240,7 +316,7 @@ namespace TTProject.src
             List<int> resultList = new List<int>();
             List<string> resultStringList = new List<string>();
 
-            string pattern = diePattern + "(" + explodingPattern + ")?(" + valuesPattern + ")?(" + successPattern + ")?";
+            string pattern = diePattern + "((" + explodingPattern + ")(" + rerollPattern + ")?|(" + rerollPattern + ")(" + explodingPattern + ")?)?(" + valuesPattern + ")?(" + successPattern + ")?";
 
             DataTable dt = new DataTable();
 

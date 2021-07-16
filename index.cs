@@ -30,5 +30,10 @@ namespace TTProject
             lbResult.Text += result + "\n";
             lbResult.Text += "Atılan Zar : " + str + "\n";
         }
+
+        private void index_Load(object sender, EventArgs e)
+        {
+            //server.startServer();
+        }
     }
 }

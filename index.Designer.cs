@@ -61,6 +61,7 @@ namespace TTProject
             // txbDiceRoller
             // 
             this.txbDiceRoller.Dock = System.Windows.Forms.DockStyle.Top;
+            this.txbDiceRoller.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txbDiceRoller.Location = new System.Drawing.Point(3, 3);
             this.txbDiceRoller.Multiline = true;
             this.txbDiceRoller.Name = "txbDiceRoller";
@@ -108,6 +109,7 @@ namespace TTProject
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "index";
             this.Text = "index";
+            this.Load += new System.EventHandler(this.index_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
