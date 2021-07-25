@@ -5,8 +5,8 @@ C:\Users\Shius\Documents\GitHub\TTProject\obj\Debug\TTProject.csprojAssemblyRefe
 C:\Users\Shius\Documents\GitHub\TTProject\obj\Debug\TTProject.index.resources
 C:\Users\Shius\Documents\GitHub\TTProject\obj\Debug\TTProject.ChatForm.resources
 C:\Users\Shius\Documents\GitHub\TTProject\obj\Debug\TTProject.src.EnterForm.resources
-C:\Users\Shius\Documents\GitHub\TTProject\bin\Debug\TTProjectServer.exe.config
-C:\Users\Shius\Documents\GitHub\TTProject\bin\Debug\TTProjectServer.exe
-C:\Users\Shius\Documents\GitHub\TTProject\bin\Debug\TTProjectServer.pdb
-C:\Users\Shius\Documents\GitHub\TTProject\obj\Debug\TTProjectServer.exe
-C:\Users\Shius\Documents\GitHub\TTProject\obj\Debug\TTProjectServer.pdb
+C:\Users\Shius\Documents\GitHub\TTProject\bin\Debug\TTProject.exe.config
+C:\Users\Shius\Documents\GitHub\TTProject\bin\Debug\TTProject.exe
+C:\Users\Shius\Documents\GitHub\TTProject\bin\Debug\TTProject.pdb
+C:\Users\Shius\Documents\GitHub\TTProject\obj\Debug\TTProject.exe
+C:\Users\Shius\Documents\GitHub\TTProject\obj\Debug\TTProject.pdb

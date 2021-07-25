@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace TTProject.src
 {
-    class Dice
+    public class Dice
     {
         Random r = new Random();
 
@@ -49,7 +49,6 @@ namespace TTProject.src
             if (paternRegex.IsMatch(s))
             {
                 Match match = paternRegex.Match(s);
-                Console.WriteLine(match.Value);
 
                 short diceFactor, factor;                
                 String[] a = splitRegex.Split(dieRegex.Match(match.Value).Value);
@@ -279,7 +278,6 @@ namespace TTProject.src
                     {
                         sValues.AddRange(values.GetRange(0, values.Count));
                     }
-                    Console.WriteLine(charList[1] + " " + charList[2]);
                     for (int i = 0; i < sValues.Count; i++)
                     {
                         switch (charList[1])

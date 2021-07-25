@@ -7,9 +7,9 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
+using TTProject.src;
 
-namespace TTProject.src
+namespace TTProject
 {
     delegate void MessageEventHandler(object sender, MessageEventArgs e);
 
@@ -143,8 +143,8 @@ namespace TTProject.src
                             message = regex.Replace(message, "");
                             Dice dice = new Dice();
                             string a = "";
-                            int result = dice.roll(message,out a, true);
-                            message = "[Rolling "+ message +"][Result = " + result + "]" + a;
+                            int result = dice.roll(message, out a, true);
+                            message = "[Rolling " + message + "][Result = " + result + "]" + a;
                         }
 
                         if (Username == null)

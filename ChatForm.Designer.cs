@@ -97,7 +97,7 @@ namespace TTProject
             // 
             this.textBox3.AllowDrop = true;
             this.textBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.textBox3.Location = new System.Drawing.Point(0, 0);
             this.textBox3.Multiline = true;
             this.textBox3.Name = "textBox3";
@@ -192,7 +192,6 @@ namespace TTProject
             this.AcceptButton = this.button2;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(532, 531);
             this.Controls.Add(this.splitContainer1);
             this.KeyPreview = true;
